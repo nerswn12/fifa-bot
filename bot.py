@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, send_file
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 import json
 import os
 
-BOT_TOKEN = "8980488374:AAFQHLYKY072189JUSSoyEZOY33nscQm6kU"
+BOT_TOKEN = os.environ.get("8980488374:AAFQHLYKY072189JUSSoyEZOY33nscQm6kU")
 ADMIN_ID = 6062006736
 
 DATA_FILE = "data.json"
@@ -25,7 +25,7 @@ app_web = Flask(__name__)
 
 @app_web.route("/")
 def player():
-    return render_template("player.html", stream=get_stream())
+    return send_file("player.html")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     site_url = os.environ.get("SITE_URL")
@@ -68,7 +68,7 @@ import threading
 def run_bot():
     telegram_app.run_polling()
 
-threading.Thread(target=run_bot).start()
+threading.Thread(target=run_bot, daemon=True).start()
 
 if __name__ == "__main__":
     app_web.run(host="0.0.0.0", port=int(os.environ.get("PORT",10000)))
